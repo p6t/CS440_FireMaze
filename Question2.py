@@ -25,8 +25,9 @@ starty = random.randrange(0, mazedim)
 goalx = random.randrange(0, mazedim)
 goaly = random.randrange(0, mazedim)
 
- 
-while maze[starty,startx] ==1 or maze[goaly,goalx]==1 or (startx == goalx and starty == goaly):
+print(maze)
+print("loop start")
+while maze[startx,starty] ==1 or maze[goalx,goaly]==1 or (startx == goalx and starty == goaly):
     if maze[starty,startx] ==1:
         startx = random.randrange(0, mazedim)
         starty = random.randrange(0, mazedim)
@@ -37,6 +38,7 @@ while maze[starty,startx] ==1 or maze[goaly,goalx]==1 or (startx == goalx and st
         goalx = random.randrange(0, mazedim)
         goaly = random.randrange(0, mazedim)
 
+print("loop end")
 check = 0
 
 def DFS_maze(maze, currentx, currenty, goalx, goaly, visited, blocked, check):
@@ -65,10 +67,9 @@ def DFS_maze(maze, currentx, currenty, goalx, goaly, visited, blocked, check):
                         if ex == currentx or why == currenty:
                             DFS_maze(maze, ex, why, goalx, goaly, visited, blocked, check)
 
-print(maze)
 print("Starting X: ",startx," Starting Y: ",starty)
 print("Ending X: ",goalx," Ending Y: ",goaly)
-DFS_maze(maze,startx,starty,goalx,goaly,visited, blocked, check)
+check = DFS_maze(maze,startx,starty,goalx,goaly,visited, blocked, check)
 
 
 
