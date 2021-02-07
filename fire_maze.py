@@ -1,7 +1,6 @@
 import sys
 import random
 import numpy as np
-import Question1 as q1
 
 # Set to see full array in console
 np.set_printoptions(threshold=sys.maxsize)
