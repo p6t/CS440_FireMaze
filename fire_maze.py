@@ -6,6 +6,7 @@ import numpy as np
 np.set_printoptions(threshold=sys.maxsize)
 
 # PROBLEM 1
+
 # Generate a maze
 def generate_maze(dim, p):
     # 0 corresponds to empty space
@@ -16,7 +17,6 @@ def generate_maze(dim, p):
     np.random.shuffle(maze)
     return maze.reshape((dim, dim))
 
-# PROBLEM 1
 # Select an initial fire location
 def start_fire(maze):
     x_index = np.random.randint(0, maze.shape[0])
@@ -29,6 +29,7 @@ def start_fire(maze):
     return maze
 
 # PROBLEM 2
+
 # An implementation of DFS
 def DFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, check):
 
@@ -58,7 +59,6 @@ def DFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, check)
                             DFS_maze(maze, q, ex, why, goalx, goaly, visited, blocked, check)
     return None
 
-# PROBLEM 2
 # Tick fire forward one step
 def spread_fire(maze, q):
     maze_copy = maze
@@ -83,6 +83,16 @@ def spread_fire(maze, q):
         if np.random.random_sample() <= p_fire:
             maze_copy[x][y] = 2
     return maze_copy
+
+# PROBLEM 3
+
+# BFS implementation
+def BFS_maze():
+    pass
+
+# A* implementation
+def Astar_maze():
+    pass
 
 """
 BEGIN TESTING CODE
