@@ -1,6 +1,8 @@
 import sys
 import random
 import numpy as np
+import astar
+import bfs
 
 # Set to see full array in console
 np.set_printoptions(threshold=sys.maxsize)
@@ -86,13 +88,7 @@ def spread_fire(maze, q):
 
 # PROBLEM 3
 
-# BFS implementation
-def BFS_maze():
-    pass
-
-# A* implementation
-def Astar_maze():
-    pass
+# See bfs.py and astar.py for implementations
 
 """
 BEGIN TESTING CODE
