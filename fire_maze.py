@@ -136,3 +136,34 @@ if(check==0):
     print("no path exists")
 else:
     print("a path exists")
+
+# PROBLEM 3
+
+# A star
+
+print("\nStarting A* search:")
+
+mazedim = 6
+p = .3
+maze = generate_maze(mazedim, p)
+print(maze)
+
+q = .1
+start, goal = astar.gen_start_and_goal(maze)
+print("Start:", start, "Goal:", goal)
+last_node = {}
+cur_cost = {}
+
+astar.search(maze, start, goal, last_node, cur_cost)
+
+path = []
+if goal not in last_node:
+    print("No path found.")
+else:
+    total_cost = cur_cost[goal]
+    cur = goal
+    while start not in path:
+        path.insert(0, last_node[cur])
+        cur = last_node[cur]
+    print("Total cost:", total_cost)
+    print("Path:", path)
