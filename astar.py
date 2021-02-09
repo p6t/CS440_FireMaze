@@ -74,8 +74,56 @@ def search(maze, start, goal, last_node, cur_cost):
                 priority = new_cost + euclidean_heuristic(next, goal)
                 frontier.put(next, priority)
                 last_node[next] = cur
+    return
 
-    pass
+def search_with_fire(maze, start, goal, last_node, cur_cost, q):
+        
+    frontier = pq()
 
+    frontier.put(start, 0)
+    last_node[start] = start
+    cur_cost[start] = 0
+
+    while not frontier.empty():
+
+        cur = frontier.get()
+
+        if cur == goal:
+            break
+
+        for next in valid_neighbors(maze, cur):
+            new_cost = cur_cost[cur] + 1
+            if next not in cur_cost or new_cost < cur_cost[next]:
+                cur_cost[next] = new_cost
+                priority = new_cost + euclidean_heuristic(next, goal)
+                frontier.put(next, priority)
+                last_node[next] = cur
+
+                maze = spread_fire(maze, q)
+    return
+
+def spread_fire(maze, q):
+    maze_copy = maze
+    for index, _ in np.ndenumerate(maze):
+        # print(index)
+        x, y = index
+        fire_neighbors = 0
+        if maze[x][y] != 1 and maze[x][y] != 2:
+            if x != 0:
+                if maze[x-1, y] == 2:
+                    fire_neighbors += 1
+            if y != 0:
+                if maze[x, y-1] == 2:
+                    fire_neighbors += 1
+            if x != maze.shape[0] - 1:
+                if maze[x+1, y] == 2:
+                    fire_neighbors += 1
+            if y != maze.shape[1] - 1:
+                if maze[x, y+1] == 2:
+                    fire_neighbors += 1
+        p_fire = 1 - (1 - q) ** fire_neighbors
+        if np.random.random_sample() <= p_fire:
+            maze_copy[x][y] = 2
+    return maze_copy
 
 

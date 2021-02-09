@@ -65,7 +65,7 @@ def DFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, check)
 def spread_fire(maze, q):
     maze_copy = maze
     for index, _ in np.ndenumerate(maze):
-        print(index)
+        # print(index)
         x, y = index
         fire_neighbors = 0
         if maze[x][y] != 1 and maze[x][y] != 2:
@@ -154,7 +154,7 @@ print("Start:", start, "Goal:", goal)
 last_node = {}
 cur_cost = {}
 
-astar.search(maze, start, goal, last_node, cur_cost)
+astar.search_with_fire(maze, start, goal, last_node, cur_cost, q)
 
 path = []
 if goal not in last_node:
