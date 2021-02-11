@@ -50,13 +50,13 @@ def DFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, check)
         if(currentx <=0 or currentx >= maze.shape[0] or currenty < 0 or currenty >= maze.shape[1]):
             return 0
 
-        for ex in range(currentx-1,currentx+1):
-            for why in range(currenty-1,currenty+1):
+        for ex in range(currentx-1,currentx+2):
+            for why in range(currenty-1,currenty+2):
                 if(check == 1):
                     return 1
 
-                if not (why,ex) in visited:
-                    if not (why,ex) in blocked:
+                if not (ex,why) in visited:
+                    if not (ex,why) in blocked:
                         if ex == currentx or why == currenty:
                             DFS_maze(maze, q, ex, why, goalx, goaly, visited, blocked, check)
     return None
