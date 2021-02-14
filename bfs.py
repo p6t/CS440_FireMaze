@@ -30,26 +30,26 @@ def start_fire(maze):
 
 # PROBLEM 2
 
+def backtrack(queue,x,y):
+    if((x,y) in queue):
+        return (queue.index((x,y)) - len(queue)  + 1)
+    else:
+        return 0
 
-
-
-
-
-
-
-
-
-
-
+def fixqueueoffset(queue,offset):
+    for x in range(offset):
+        queue.pop()
+    return queue
 
 # An implementation of BFS
 def BFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, queue):
-
+    offset = abs(backtrack(queue,currentx,currenty))
     if queue:
+        queue = fixqueueoffset(queue,offset)
 
         if(queue.pop(0) == ((goalx,goaly))):
-            visited.append(ex,why)
-            return 1;
+            visited.append(currentx,currenty)
+            return 1
         maze = spread_fire(maze, q)
 
         for ex in range(currentx-1,currentx+1):
@@ -70,22 +70,10 @@ def BFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, queue)
                     if not (ex,why) in blocked:
                         if ex == currentx or why == currenty:
                             queue.append(ex,why)
-                            return BFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, queue)
+                            return BFS_maze(maze, q, ex, why, goalx, goaly, visited, blocked, queue)
     #end of loop
     else:
         return 0
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # Tick fire forward one step
