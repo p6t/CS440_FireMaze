@@ -36,21 +36,37 @@ def backtrack(queue,x,y):
     else:
         return 0
 
-def fixqueueoffset(queue,offset):
+def fixarrayoffset(queue,offset):
     for x in range(offset):
         queue.pop()
     return queue
 
+def fixfireoffset(maze,firetrack,offset):
+    track = 0
+    for x,y in range(offset,len(firetrack)):
+        if(track>=len(firetrack)-offset):
+            maze[x,y] = 0
+        else:
+            continue
+    return maze
+
+
 # An implementation of BFS
-def BFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, queue):
+def BFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, queue, firetrack):
+    
     offset = abs(backtrack(queue,currentx,currenty))
     if queue:
-        queue = fixqueueoffset(queue,offset)
+        queue = fixarrayoffset(queue,offset)
 
         if(queue.pop(0) == ((goalx,goaly))):
             visited.append(currentx,currenty)
             return 1
-        maze = spread_fire(maze, q)
+        
+        store = spread_fire(maze, q)
+        maze = store[0]
+        firetrack.append(store[1])
+        maze = fixfireoffset(maze,firetrack,offset)
+        firetrack = fixarrayoffset(firetrack,offset)
 
         for ex in range(currentx-1,currentx+1):
             for why in range(currenty-1,currenty+1):
@@ -70,7 +86,7 @@ def BFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, queue)
                     if not (ex,why) in blocked:
                         if ex == currentx or why == currenty:
                             queue.append(ex,why)
-                            return BFS_maze(maze, q, ex, why, goalx, goaly, visited, blocked, queue)
+                            return BFS_maze(maze, q, ex, why, goalx, goaly, visited, blocked, queue, firetrack)
     #end of loop
     else:
         return 0
@@ -79,6 +95,7 @@ def BFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, queue)
 # Tick fire forward one step
 def spread_fire(maze, q):
     maze_copy = maze
+    
     for index, _ in np.ndenumerate(maze):
         print(index)
         x, y = index
@@ -99,7 +116,8 @@ def spread_fire(maze, q):
         p_fire = 1 - (1 - q) ** fire_neighbors
         if np.random.random_sample() <= p_fire:
             maze_copy[x][y] = 2
-    return maze_copy
+    store = [maze_copy,((x,y))]
+    return store
 
 # PROBLEM 3
 
@@ -144,9 +162,10 @@ print("Ending X:", goalx,", Ending Y:", goaly)
 visited = []
 blocked = []
 queue = []
+firetrack = []
 check = 0
 queue.append((startx,starty))
-check = BFS_maze(maze, fire_chance, startx, starty, goalx, goaly, visited, blocked, queue)
+check = BFS_maze(maze, fire_chance, startx, starty, goalx, goaly, visited, blocked, queue, firetrack)
 
 print("Path:", visited,", Length:", len(visited))
 if(check==0):
