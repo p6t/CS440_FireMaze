@@ -78,8 +78,8 @@ def BFS_maze(maze, q, goalx, goaly, visited, blocked, queue):
         #maze = fixfireoffset(maze,firetrack,offset)
         #firetrack = fixarrayoffset(firetrack,offset)
         maze = spread_fire(maze,q)
-        print("\n")
-        print(maze)
+        #print("\n")
+        #print(maze)
         for ex in range(todox-1,todox+2):
             for why in range(todoy-1,todoy+2):
                 if(ex <=0 or ex >= maze.shape[0] or why < 0 or why >= maze.shape[1]):
@@ -157,6 +157,8 @@ starty = random.randrange(0, mazedim)
 goalx = random.randrange(0, mazedim)
 goaly = random.randrange(0, mazedim)
 
+print("Starting BFS")
+
 print(maze)
 while maze[startx, starty] != 0 or maze[goalx, goaly] != 0 or (startx == goalx and starty == goaly):
     if maze[startx, starty] != 0:
@@ -184,3 +186,4 @@ if(check==0):
     print("no path exists")
 else:
     print("a path exists")
+print("\n")

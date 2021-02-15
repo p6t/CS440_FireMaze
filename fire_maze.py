@@ -35,6 +35,9 @@ def start_fire(maze):
 # An implementation of DFS
 def DFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, check):
 
+    if(currentx <=0 or currentx >= maze.shape[0] or currenty < 0 or currenty >= maze.shape[1]):
+            return 0
+
     maze = spread_fire(maze, q)
 
     if(check == 0):
@@ -47,9 +50,6 @@ def DFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, check)
             check = 1
             return 1
 
-        if(currentx <=0 or currentx >= maze.shape[0] or currenty < 0 or currenty >= maze.shape[1]):
-            return 0
-
         for ex in range(currentx-1,currentx+2):
             for why in range(currenty-1,currenty+2):
                 if(check == 1):
@@ -59,7 +59,7 @@ def DFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, check)
                     if not (ex,why) in blocked:
                         if ex == currentx or why == currenty:
                             DFS_maze(maze, q, ex, why, goalx, goaly, visited, blocked, check)
-    return None
+    return 1
 
 # Tick fire forward one step
 def spread_fire(maze, q):
@@ -101,6 +101,8 @@ maze = start_fire(generate_maze(mazedim, .3))
 
 # PROBLEM 2 TESTING
 
+print("Starting DFS")
+
 fire_chance = .1
 
 visited = []
@@ -136,6 +138,7 @@ if(check==0):
     print("no path exists")
 else:
     print("a path exists")
+print("\n")
 
 # PROBLEM 3
 
@@ -167,3 +170,4 @@ else:
         cur = last_node[cur]
     print("Total cost:", total_cost)
     print("Path:", path)
+print("\n")
