@@ -144,46 +144,66 @@ BEGIN TESTING CODE
 """
 
 # PROBLEM 1 TESTING
+allfive = []
+track = 0.0
+increment = 0
+while(len(allfive)<55):
+    print(increment)
+    print(track)
+    mazedim = 50
+    maze = start_fire(generate_maze(mazedim, .3))
 
-mazedim = 30
-maze = start_fire(generate_maze(mazedim, .3))
+    # PROBLEM 2 TESTING
 
-# PROBLEM 2 TESTING
+    fire_chance = track
 
-fire_chance = .1
+    startx = random.randrange(0, mazedim)
+    starty = random.randrange(0, mazedim)
+    goalx = random.randrange(0, mazedim)
+    goaly = random.randrange(0, mazedim)
 
-startx = random.randrange(0, mazedim)
-starty = random.randrange(0, mazedim)
-goalx = random.randrange(0, mazedim)
-goaly = random.randrange(0, mazedim)
+    #print("Starting BFS")
 
-print("Starting BFS")
+    #print(maze)
+    while maze[startx, starty] != 0 or maze[goalx, goaly] != 0 or (startx == goalx and starty == goaly):
+        if maze[startx, starty] != 0:
+            startx = random.randrange(0, mazedim)
+            starty = random.randrange(0, mazedim)
+        if maze[goalx, goaly] != 0:
+            goalx = random.randrange(0, mazedim)
+            goaly = random.randrange(0, mazedim)
+        if startx == goalx and starty == goaly:
+            goalx = random.randrange(0, mazedim)
+            goaly = random.randrange(0, mazedim)
 
-print(maze)
-while maze[startx, starty] != 0 or maze[goalx, goaly] != 0 or (startx == goalx and starty == goaly):
-    if maze[startx, starty] != 0:
-        startx = random.randrange(0, mazedim)
-        starty = random.randrange(0, mazedim)
-    if maze[goalx, goaly] != 0:
-        goalx = random.randrange(0, mazedim)
-        goaly = random.randrange(0, mazedim)
-    if startx == goalx and starty == goaly:
-        goalx = random.randrange(0, mazedim)
-        goaly = random.randrange(0, mazedim)
+    #print("Starting X:", startx,", StartingY:", starty)
+    #print("Ending X:", goalx,", Ending Y:", goaly)
 
-print("Starting X:", startx,", StartingY:", starty)
-print("Ending X:", goalx,", Ending Y:", goaly)
 
-visited = []
-blocked = []
-queue = []
-#firetrack = []
-check = 0
-queue.append((startx,starty))
-check = BFS_maze(maze, fire_chance, goalx, goaly, visited, blocked, queue)
-print("Path:", visited,", Length:", len(visited))
-if(check==0):
-    print("no path exists")
-else:
-    print("a path exists")
-print("\n")
+    visited = []
+    blocked = []
+    queue = []
+    #firetrack = []
+    check = 0
+    queue.append((startx,starty))
+    check = BFS_maze(maze, fire_chance, goalx, goaly, visited, blocked, queue)
+    #print("Path:", visited,", Length:", len(visited))
+    #if(check==0):
+    #    print("no path exists")
+    #else:
+    #    print("a path exists")
+    print("\n")
+
+    allfive.append(len(visited))
+    increment+=1
+    
+    
+    if increment==5:
+        track+=0.1
+        increment =0
+    
+    
+
+print(allfive)
+
+firstresult = [3508, 10050, 368, 14945, 6975, 1143, 525, 924, 1059, 571, 637, 491, 308, 223, 261, 476, 292, 492, 469, 216, 59, 268, 147, 74, 308, 166, 159, 125, 178, 125, 314, 46, 21, 71, 176, 227, 133, 119, 49, 205, 57, 318, 195, 89, 123, 26, 19, 16, 3892, 71, 56, 26, 59, 149, 114]
