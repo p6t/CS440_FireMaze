@@ -1,8 +1,6 @@
 import sys
 import random
 import numpy as np
-import astar
-import bfs
 
 # Set to see full array in console
 np.set_printoptions(threshold=sys.maxsize)
@@ -32,34 +30,41 @@ def start_fire(maze):
 
 # PROBLEM 2
 
+
 # An implementation of DFS
-def DFS_maze(maze, q, currentx, currenty, goalx, goaly, visited, blocked, check):
+def DFS_maze(maze, q, goalx, goaly, visited, blocked, stack):
+    while stack:
+        
+        store = (stack.pop())
+        todox = store[0]
+        todoy = store[1]
 
-    if(currentx <=0 or currentx >= maze.shape[0] or currenty < 0 or currenty >= maze.shape[1]):
-            return 0
-
-    maze = spread_fire(maze, q)
-
-    if(check == 0):
-        if(maze[currenty,currentx] != 0):
-            blocked.append((currenty,currentx))
-            return 0
-
-        visited.append((currenty,currentx))
-        if(currentx==goalx and currenty == goaly):
-            check = 1
+        visited.append((todox,todoy))
+        if(((todox,todoy)) == ((goalx,goaly))):
             return 1
+        
 
-        for ex in range(currentx-1,currentx+2):
-            for why in range(currenty-1,currenty+2):
-                if(check == 1):
-                    return 1
+        maze = spread_fire(maze,q)
+        #print("\n")
+        #print(maze)
+        for ex in range(todox-1,todox+2):
+            for why in range(todoy-1,todoy+2):
+                if(ex <=0 or ex >= maze.shape[0] or why < 0 or why >= maze.shape[1]):
+                    continue
+                elif ((ex,why)) in visited:
+                    continue
+                elif((ex,why)) in blocked:
+                    continue
+                elif(maze[ex,why] != 0):
+                    blocked.append((ex,why))
+                elif(((ex,why)) in stack):
+                    continue
+                elif ex == todox or why == todoy:
+                    stack.append((ex,why))
+    
+    else:
+        return 0
 
-                if not (ex,why) in visited:
-                    if not (ex,why) in blocked:
-                        if ex == currentx or why == currenty:
-                            DFS_maze(maze, q, ex, why, goalx, goaly, visited, blocked, check)
-    return 1
 
 # Tick fire forward one step
 def spread_fire(maze, q):
@@ -96,14 +101,16 @@ BEGIN TESTING CODE
 
 # PROBLEM 1 TESTING
 
-mazedim = 4
-maze = start_fire(generate_maze(mazedim, .3))
+mazedim = 85
+
+
+maze = start_fire(generate_maze(mazedim, 0.3))
 
 # PROBLEM 2 TESTING
 
-print("Starting DFS")
+#print("Starting DFS")
 
-fire_chance = .1
+fire_chance = 0
 
 visited = []
 blocked = []
@@ -112,8 +119,8 @@ starty = random.randrange(0, mazedim)
 goalx = random.randrange(0, mazedim)
 goaly = random.randrange(0, mazedim)
 
-print(maze)
-print("loop start")
+#print(maze)
+#print("loop start")
 while maze[startx, starty] != 0 or maze[goalx, goaly] != 0 or (startx == goalx and starty == goaly):
     if maze[startx, starty] != 0:
         startx = random.randrange(0, mazedim)
@@ -125,12 +132,13 @@ while maze[startx, starty] != 0 or maze[goalx, goaly] != 0 or (startx == goalx a
         goalx = random.randrange(0, mazedim)
         goaly = random.randrange(0, mazedim)
 
-print("loop end")
+#print("loop end")
 check = 0
 
-print("Starting X:", startx,", StartingY:", starty)
-print("Ending X:", goalx,", Ending Y:", goaly)
-check = DFS_maze(maze, fire_chance, startx, starty, goalx, goaly, visited, blocked, check)
+#print("Starting X:", startx,", StartingY:", starty)
+#print("Ending X:", goalx,", Ending Y:", goaly)
+stack = [((startx,starty))]
+check = DFS_maze(maze, fire_chance, goalx, goaly, visited, blocked, stack)
 
 
 print("Path:", visited,", Length:", len(visited))
@@ -140,34 +148,3 @@ else:
     print("a path exists")
 print("\n")
 
-# PROBLEM 3
-
-# A star
-
-print("\nStarting A* search:")
-
-mazedim = 6
-p = .3
-maze = generate_maze(mazedim, p)
-print(maze)
-
-q = .1
-start, goal = astar.gen_start_and_goal(maze)
-print("Start:", start, "Goal:", goal)
-last_node = {}
-cur_cost = {}
-
-astar.search_with_fire(maze, start, goal, last_node, cur_cost, q)
-
-path = []
-if goal not in last_node:
-    print("No path found.")
-else:
-    total_cost = cur_cost[goal]
-    cur = goal
-    while start not in path:
-        path.insert(0, last_node[cur])
-        cur = last_node[cur]
-    print("Total cost:", total_cost)
-    print("Path:", path)
-print("\n")

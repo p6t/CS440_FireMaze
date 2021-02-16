@@ -1,7 +1,6 @@
 import sys
 import random
 import numpy as np
-import astar
 
 # Set to see full array in console
 np.set_printoptions(threshold=sys.maxsize)
@@ -28,6 +27,44 @@ def start_fire(maze):
     # 2 corresponds to fire
     maze[x_index][y_index] = 2
     return maze
+
+# PROBLEM 2
+
+
+# An implementation of DFS
+def DFS_maze(maze, q, goalx, goaly, visited, blocked, stack):
+    while stack:
+        
+        store = (stack.pop())
+        todox = store[0]
+        todoy = store[1]
+
+        visited.append((todox,todoy))
+        if(((todox,todoy)) == ((goalx,goaly))):
+            return 1
+        
+
+        maze = spread_fire(maze,q)
+        #print("\n")
+        #print(maze)
+        for ex in range(todox-1,todox+2):
+            for why in range(todoy-1,todoy+2):
+                if(ex <=0 or ex >= maze.shape[0] or why < 0 or why >= maze.shape[1]):
+                    continue
+                elif ((ex,why)) in visited:
+                    continue
+                elif((ex,why)) in blocked:
+                    continue
+                elif(maze[ex,why] != 0):
+                    blocked.append((ex,why))
+                elif(((ex,why)) in stack):
+                    continue
+                elif ex == todox or why == todoy:
+                    stack.append((ex,why))
+    
+    else:
+        return 0
+
 
 # Tick fire forward one step
 def spread_fire(maze, q):
@@ -64,13 +101,16 @@ BEGIN TESTING CODE
 
 # PROBLEM 1 TESTING
 
+mazedim = 85
+
+
+maze = start_fire(generate_maze(mazedim, 0.3))
 
 # PROBLEM 2 TESTING
 
-mazedim = 70
+#print("Starting DFS")
 
-p = 0.3
-maze = generate_maze(mazedim, p)
+fire_chance = 0
 
 visited = []
 blocked = []
@@ -79,6 +119,8 @@ starty = random.randrange(0, mazedim)
 goalx = random.randrange(0, mazedim)
 goaly = random.randrange(0, mazedim)
 
+#print(maze)
+#print("loop start")
 while maze[startx, starty] != 0 or maze[goalx, goaly] != 0 or (startx == goalx and starty == goaly):
     if maze[startx, starty] != 0:
         startx = random.randrange(0, mazedim)
@@ -90,35 +132,19 @@ while maze[startx, starty] != 0 or maze[goalx, goaly] != 0 or (startx == goalx a
         goalx = random.randrange(0, mazedim)
         goaly = random.randrange(0, mazedim)
 
+#print("loop end")
+check = 0
 
-# PROBLEM 3
+#print("Starting X:", startx,", StartingY:", starty)
+#print("Ending X:", goalx,", Ending Y:", goaly)
+stack = [((startx,starty))]
+check = DFS_maze(maze, fire_chance, goalx, goaly, visited, blocked, stack)
 
-# A star
 
-#print("\nStarting A* search:")
-
-
-#print(maze)
-
-q = 0
-start, goal = astar.gen_start_and_goal(maze)
-#print("Start:", start, "Goal:", goal)
-last_node = {}
-cur_cost = {}
-
-astar.search_with_fire(maze, start, goal, last_node, cur_cost, q)
-
-path = []
-if goal not in last_node:
-    print("No path found.")
+print("Path:", visited,", Length:", len(visited))
+if(check==0):
+    print("no path exists")
 else:
-    total_cost = cur_cost[goal]
-    cur = goal
-    while start not in path:
-        path.insert(0, last_node[cur])
-        cur = last_node[cur]
-    #print("Total cost:", total_cost)
-    print("length: ", len(path))
-
-#print("\n")
+    print("a path exists")
+print("\n")
 
