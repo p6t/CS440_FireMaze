@@ -102,7 +102,7 @@ BEGIN TESTING CODE
 # PROBLEM 1 TESTING
 
 
-mazedim = 80
+mazedim = 40
 maze = start_fire(generate_maze(mazedim, 0.3))
 
 # PROBLEM 2 TESTING

@@ -9,29 +9,13 @@ np.set_printoptions(threshold=sys.maxsize)
 
 # PROBLEM 2 TESTING
 
-mazedim = 70
+mazedim = 40
 
 p = 0.3
 maze = mazegen.generate_maze(mazedim, p)
 
 visited = []
 blocked = []
-startx = random.randrange(0, mazedim)
-starty = random.randrange(0, mazedim)
-goalx = random.randrange(0, mazedim)
-goaly = random.randrange(0, mazedim)
-
-while maze[startx, starty] != 0 or maze[goalx, goaly] != 0 or (startx == goalx and starty == goaly):
-    if maze[startx, starty] != 0:
-        startx = random.randrange(0, mazedim)
-        starty = random.randrange(0, mazedim)
-    if maze[goalx, goaly] != 0:
-        goalx = random.randrange(0, mazedim)
-        goaly = random.randrange(0, mazedim)
-    if startx == goalx and starty == goaly:
-        goalx = random.randrange(0, mazedim)
-        goaly = random.randrange(0, mazedim)
-
 
 # PROBLEM 3
 
@@ -43,7 +27,9 @@ while maze[startx, starty] != 0 or maze[goalx, goaly] != 0 or (startx == goalx a
 #print(maze)
 
 q = 0
-start, goal = astar.gen_start_and_goal(maze)
+start = ((0,0))
+goal = ((len(maze)-1,len(maze)-1))
+#start, goal = astar.gen_start_and_goal(maze)
 #print("Start:", start, "Goal:", goal)
 last_node = {}
 cur_cost = {}
@@ -59,7 +45,7 @@ else:
     while start not in path:
         path.insert(0, last_node[cur])
         cur = last_node[cur]
-    #print("Total cost:", total_cost)
+    print("Total cost:", total_cost)
     print("length: ", len(path))
 
 #print("\n")
