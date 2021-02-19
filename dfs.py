@@ -32,36 +32,41 @@ def start_fire(maze):
 
 
 # An implementation of DFS
+#maze = the actual maze. q is the obstacle Density
+#goalx goaly are coordinate goals
+# visited marks what has already been visited
+#blocked shows what is an obstacle or on fire
+#the stack holds what needs to be visited still
 def DFS_maze(maze, q, goalx, goaly, visited, blocked, stack):
-    while stack:
-        
-        store = (stack.pop())
-        todox = store[0]
-        todoy = store[1]
+    while stack: #if any items are left on the stack
 
-        visited.append((todox,todoy))
-        if(((todox,todoy)) == ((goalx,goaly))):
-            return 1
-        
+        store = (stack.pop()) #pop the last item, so fifo
+        todox = store[0] #coordinate x
+        todoy = store[1] #coordinate y
 
-        maze = spread_fire(maze,q)
+        visited.append((todox,todoy)) #append current to visited
+        if(((todox,todoy)) == ((goalx,goaly))): #if the current is the goal
+            return 1 #exit out
+
+
+        maze = spread_fire(maze,q) #advance the fire
         #print("\n")
         #print(maze)
-        for ex in range(todox-1,todox+2):
-            for why in range(todoy-1,todoy+2):
+        for ex in range(todox-1,todox+2): #for one to the left and one right
+            for why in range(todoy-1,todoy+2): #for one up and one down
                 if(ex <=0 or ex >= maze.shape[0] or why < 0 or why >= maze.shape[1]):
+                    continue #if it has exited the array space
+                elif ((ex,why)) in visited: #if it has already been visited
                     continue
-                elif ((ex,why)) in visited:
+                elif((ex,why)) in blocked: #if it has been marked blocked
                     continue
-                elif((ex,why)) in blocked:
+                elif(maze[ex,why] != 0): #if it is on fire or blocked
+                    blocked.append((ex,why)) #add to blocked
+                elif(((ex,why)) in stack): #if it is already added to the stack
                     continue
-                elif(maze[ex,why] != 0):
-                    blocked.append((ex,why))
-                elif(((ex,why)) in stack):
-                    continue
-                elif ex == todox or why == todoy:
-                    stack.append((ex,why))
-    
+                elif ex == todox or why == todoy: #if it is adjacent
+                    stack.append((ex,why)) #add to stack
+
     else:
         return 0
 
@@ -147,4 +152,3 @@ if(check==0):
 else:
     print("a path exists")
 print("\n")
-

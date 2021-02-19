@@ -39,34 +39,34 @@ def backtrack(queue,x,y):
 
 # An implementation of BFS
 def BFS_maze(maze, q, goalx, goaly, visited, blocked, queue):
-    while queue:
-        
-        store = (queue.pop(0))
-        todox = store[0]
-        todoy = store[1]
+    while queue: #while coords still need to be visited
 
-        visited.append((todox,todoy))
-        if(((todox,todoy)) == ((goalx,goaly))):
+        store = (queue.pop(0)) #pop from the front
+        todox = store[0] #coordx
+        todoy = store[1] #coordy
+
+        visited.append((todox,todoy)) #append to visited
+        if(((todox,todoy)) == ((goalx,goaly))): #if current is the goal
             return 1
 
-        maze = spread_fire(maze,q)
+        maze = spread_fire(maze,q) #step forward one fire
         #print("\n")
         #print(maze)
-        for ex in range(todox-1,todox+2):
-            for why in range(todoy-1,todoy+2):
+        for ex in range(todox-1,todox+2): #for left and right one
+            for why in range(todoy-1,todoy+2): #for up and down one
                 if(ex <=0 or ex >= maze.shape[0] or why < 0 or why >= maze.shape[1]):
+                    continue #if it has exited the maze shape
+                elif ((ex,why)) in visited: #if it has already been visited
                     continue
-                elif ((ex,why)) in visited:
+                elif((ex,why)) in blocked: #if the coordinates are blocked
                     continue
-                elif((ex,why)) in blocked:
-                    continue
-                elif(maze[ex,why] != 0):
+                elif(maze[ex,why] != 0): #if the coordinates need to be blocked
                     blocked.append((ex,why))
-                elif(((ex,why)) in queue):
+                elif(((ex,why)) in queue): #if its already in the queue
                     continue
-                elif ex == todox or why == todoy:
-                    queue.append((ex,why))
-    
+                elif ex == todox or why == todoy: #if it is adjacent to the square
+                    queue.append((ex,why)) #append to queue
+
     else:
         return 0
 
@@ -74,7 +74,7 @@ def BFS_maze(maze, q, goalx, goaly, visited, blocked, queue):
 # Tick fire forward one step
 def spread_fire(maze, q):
     maze_copy = maze
-    
+
     for index, _ in np.ndenumerate(maze):
         x, y = index
         fire_neighbors = 0
