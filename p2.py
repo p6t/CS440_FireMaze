@@ -121,23 +121,18 @@ while(track<100):
 
     visited = []
     blocked = []
-    startx = random.randrange(0, mazedim)
-    starty = random.randrange(0, mazedim)
-    goalx = random.randrange(0, mazedim)
-    goaly = random.randrange(0, mazedim)
+    startx = 0
+    starty = 0
+    goalx = len(maze)-1
+    goaly = len(maze)-1
 
-    #print(maze)
-    #print("loop start")
-    while maze[startx, starty] != 0 or maze[goalx, goaly] != 0 or (startx == goalx and starty == goaly):
-        if maze[startx, starty] != 0:
-            startx = random.randrange(0, mazedim)
-            starty = random.randrange(0, mazedim)
-        if maze[goalx, goaly] != 0:
-            goalx = random.randrange(0, mazedim)
-            goaly = random.randrange(0, mazedim)
-        if startx == goalx and starty == goaly:
-            goalx = random.randrange(0, mazedim)
-            goaly = random.randrange(0, mazedim)
+    print("Starting BFS")
+
+    print(maze)
+
+    print("Starting X:", 0 ,", StartingY:", 0)
+    print("Ending X:", goalx,", Ending Y:", goaly)
+
 
     #print("loop end")
     check = 0

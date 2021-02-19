@@ -3,6 +3,7 @@ import random
 import numpy as np
 import astar
 import mazegen
+import matplotlib.pyplot as plt
 
 # Set to see full array in console
 np.set_printoptions(threshold=sys.maxsize)
@@ -120,98 +121,128 @@ BEGIN TESTING CODE
 
 
 #astar
+all = []
+track = 0
+thick = 0.0
+while(track<100):
+    print(track)
+    print(thick)
+    #print("astar start")
+    mazedim = 50
+
+    maze = mazegen.generate_maze(mazedim, thick)
+
+    visited = []
+    blocked = []
 
 
-mazedim = 70
+    q = 0
+    start = ((0,0))
+    goal = ((len(maze)-1,len(maze[0])-1))
+    #start, goal = astar.gen_start_and_goal(maze)
+    #print("Start:", start, "Goal:", goal)
+    last_node = {}
+    cur_cost = {}
 
-p = 0.3
-maze = mazegen.generate_maze(mazedim, p)
+    astar.search_with_fire(maze, start, goal, last_node, cur_cost, q)
 
-visited = []
-blocked = []
-startx = random.randrange(0, mazedim)
-starty = random.randrange(0, mazedim)
-goalx = random.randrange(0, mazedim)
-goaly = random.randrange(0, mazedim)
+    path = []
+    if goal not in last_node:
+        print("No path found.")
+    else:
+        total_cost = cur_cost[goal]
+        cur = goal
+        while start not in path:
+            path.insert(0, last_node[cur])
+            cur = last_node[cur]
+        #print("Total cost:", total_cost)
+        print("length: ", len(path))
 
-while maze[startx, starty] != 0 or maze[goalx, goaly] != 0 or (startx == goalx and starty == goaly):
-    if maze[startx, starty] != 0:
-        startx = random.randrange(0, mazedim)
-        starty = random.randrange(0, mazedim)
-    if maze[goalx, goaly] != 0:
-        goalx = random.randrange(0, mazedim)
-        goaly = random.randrange(0, mazedim)
-    if startx == goalx and starty == goaly:
-        goalx = random.randrange(0, mazedim)
-        goaly = random.randrange(0, mazedim)
+    print("\n")
+    all.append(len(path))
+    #print ("astar end")
+    track +=1
+    if(track%10==0):
+        thick+=0.1
 
-
-
-q = 0
-start, goal = astar.gen_start_and_goal(maze)
-#print("Start:", start, "Goal:", goal)
-last_node = {}
-cur_cost = {}
-
-astar.search_with_fire(maze, start, goal, last_node, cur_cost, q)
-
-path = []
-if goal not in last_node:
-    print("No path found.")
-else:
-    total_cost = cur_cost[goal]
-    cur = goal
-    while start not in path:
-        path.insert(0, last_node[cur])
-        cur = last_node[cur]
-    #print("Total cost:", total_cost)
-    print("length: ", len(path))
-
-#print("\n")
-
-
+n=10
+list1 = [sum(all[i:i+n]) /n for i in range(0,len(all),n)]
+#print("The average per p value from 0 to 0.9: ")
+print(list1)
 
 
 
 
 #BFS
 
-maze = start_fire(generate_maze(mazedim, p))
+all = []
+track = 0
+thick = 0.0
+while(track<100):
+    print(track)
+    print(thick)
+    #print("Starting BFS")
+    maze = start_fire(generate_maze(mazedim, thick))
 
-fire_chance = 0
+    fire_chance = 0
 
-startx = random.randrange(0, mazedim)
-starty = random.randrange(0, mazedim)
-goalx = random.randrange(0, mazedim)
-goaly = random.randrange(0, mazedim)
-
-print("Starting BFS")
-
-print(maze)
-while maze[startx, starty] != 0 or maze[goalx, goaly] != 0 or (startx == goalx and starty == goaly):
-    if maze[startx, starty] != 0:
-        startx = random.randrange(0, mazedim)
-        starty = random.randrange(0, mazedim)
-    if maze[goalx, goaly] != 0:
-        goalx = random.randrange(0, mazedim)
-        goaly = random.randrange(0, mazedim)
-    if startx == goalx and starty == goaly:
-        goalx = random.randrange(0, mazedim)
-        goaly = random.randrange(0, mazedim)
-
-print("Starting X:", startx,", StartingY:", starty)
-print("Ending X:", goalx,", Ending Y:", goaly)
+    startx = 0
+    starty = 0
+    goalx = len(maze)-1
+    goaly = len(maze)-1
 
 
-visited = []
-blocked = []
-queue = []
-check = 0
-queue.append((startx,starty))
-check = BFS_maze(maze, fire_chance, goalx, goaly, visited, blocked, queue)
-print("Path:", visited,", Length:", len(visited))
-if(check==0):
-    print("no path exists")
-else:
-    print("a path exists")
-print("\n")
+
+
+    #print("Starting X:", 0 ,", StartingY:", 0)
+    #print("Ending X:", goalx,", Ending Y:", goaly)
+
+
+
+    visited = []
+    blocked = []
+    queue = []
+    check = 0
+    queue.append((startx,starty))
+    check = BFS_maze(maze, fire_chance, goalx, goaly, visited, blocked, queue)
+    #print("Path:", visited,", Length:", len(visited))
+    '''
+    if(check==0):
+        print("no path exists")
+    else:
+        print("a path exists")
+    print("\n")
+    '''
+    print("\n")
+    all.append(len(visited))
+    #print ("astar end")
+    track +=1
+    if(track%10==0):
+        thick+=0.1
+
+n=10
+list2 = [sum(all[i:i+n]) /n for i in range(0,len(all),n)]
+#print("The average per p value from 0 to 0.9: ")
+print(list2)
+
+answer  = [(a - b) for a,b in zip(list2,list1)]
+
+
+x1 = [0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+
+# plotting the line 1 points
+plt.plot(x1, list2)
+
+
+# naming the x axis
+plt.xlabel('Obstacle Density')
+# naming the y axis
+plt.ylabel('# of Nodes Explored')
+# giving a title to my graph
+plt.title('BFS Explored - A* Explored')
+
+# show a legend on the plot
+plt.legend()
+
+# function to show the plot
+plt.show()

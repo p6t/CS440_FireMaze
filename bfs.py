@@ -30,12 +30,6 @@ def start_fire(maze):
 
 # PROBLEM 2
 
-def backtrack(queue,x,y):
-    if((x,y) in queue):
-        return (queue.index((x,y)) - len(queue)  + 1)
-    else:
-        return 0
-
 
 # An implementation of BFS
 def BFS_maze(maze, q, goalx, goaly, visited, blocked, queue):
@@ -115,26 +109,16 @@ maze = start_fire(generate_maze(mazedim, 0.3))
 
 fire_chance = 0
 
-startx = random.randrange(0, mazedim)
-starty = random.randrange(0, mazedim)
-goalx = random.randrange(0, mazedim)
-goaly = random.randrange(0, mazedim)
+startx = 0
+starty = 0
+goalx = len(maze)-1
+goaly = len(maze)-1
 
 print("Starting BFS")
 
-print(maze)
-while maze[startx, starty] != 0 or maze[goalx, goaly] != 0 or (startx == goalx and starty == goaly):
-    if maze[startx, starty] != 0:
-        startx = random.randrange(0, mazedim)
-        starty = random.randrange(0, mazedim)
-    if maze[goalx, goaly] != 0:
-        goalx = random.randrange(0, mazedim)
-        goaly = random.randrange(0, mazedim)
-    if startx == goalx and starty == goaly:
-        goalx = random.randrange(0, mazedim)
-        goaly = random.randrange(0, mazedim)
 
-print("Starting X:", startx,", StartingY:", starty)
+print(maze)
+print("Starting X:", 0 ,", StartingY:", 0)
 print("Ending X:", goalx,", Ending Y:", goaly)
 
 
