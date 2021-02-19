@@ -3,33 +3,32 @@ import numpy as np
 import math
 from queue import PriorityQueue as pq
 
+# This file contains implementations for A* (duh)
+# Also includes implementation for fire spreading
 
-def gen_start_and_goal(maze):
+"""
+Euclidean distance metric
 
-    startx = random.randrange(0, maze.shape[0])
-    starty = random.randrange(0, maze.shape[1])
-    goalx = random.randrange(0, maze.shape[0])
-    goaly = random.randrange(0, maze.shape[1])
+Parameters:
+first (tuple of (int, int) in x, y order): first point on maze
+second (tuple of (int, int) in x, y order): second point on maze
 
-    while maze[startx, starty] != 0 or maze[goalx, goaly] != 0 or (startx == goalx and starty == goaly):
-        if maze[startx, starty] != 0:
-            startx = random.randrange(0, maze.shape[0])
-            starty = random.randrange(0, maze.shape[1])
-        if maze[goalx, goaly] != 0:
-            goalx = random.randrange(0, maze.shape[0])
-            goaly = random.randrange(0, maze.shape[1])
-        if startx == goalx and starty == goaly:
-            goalx = random.randrange(0, maze.shape[0])
-            goaly = random.randrange(0, maze.shape[1])
-
-    start = (startx, starty)
-    goal = (goalx, goaly)
-
-    return (start, goal)
-
+Return:
+(float): the distance between both points
+"""
 def euclidean_heuristic(first, second):
     return math.sqrt((first[0] - second[0]) ** 2 + (first[1] - second[1]) ** 2)
 
+"""
+Determine valid neighbors
+
+Parameters:
+maze (numpy array): the maze, described in mazegen.py
+loc (tuple of (int, int) in x, y order): a cell to find valid neighbors for
+
+Return:
+(int): number of valid neigbors of the cell
+"""
 def valid_neighbors(maze, loc):
     neighbors = []
 
@@ -47,13 +46,22 @@ def valid_neighbors(maze, loc):
     
     return neighbors
 
-# maze: a numpy array
-# start: a tuple (x, y) for maze location
-# goal: a tuple (x, y) for maze location
-# last_node: a dict linking node to previous step
-# cur_cost: a dict linking node to arrival cost from start
+"""
+A* search implementation
+
+Parameters:
+maze (numpy array): the maze, described in mazegen.py
+start (tuple of (int, int) in x, y order): the start location for the search
+goal (tuple of (int, int) in x, y order): the goal location for the search
+last_node (dict of (x, y) coordinate tuples to other (x, y) coordinate tuples): last_node[key] gives the node that A* visited before the key node
+cur_cost (dict of (x, y): coordinate tuples to ints): cur_cost[key] gives the current cost to travel from start to key
+
+Return:
+None
+"""
 def search(maze, start, goal, last_node, cur_cost):
     
+    # Priority queue, woohoo!
     frontier = pq()
 
     frontier.put(start, 0)
@@ -76,6 +84,20 @@ def search(maze, start, goal, last_node, cur_cost):
                 last_node[next] = cur
     return
 
+"""
+A* search implementation, fire included
+
+Parameters:
+maze (numpy array): the maze, described in mazegen.py
+start (tuple of (int, int) in x, y order): the start location for the search
+goal (tuple of (int, int) in x, y order): the goal location for the search
+last_node (dict of (x, y) coordinate tuples to other (x, y) coordinate tuples): last_node[key] gives the node that A* visited before the key node
+cur_cost (dict of (x, y) coordinate tuples to ints): cur_cost[key] gives the current cost to travel from start to key
+q (float between 0 and 1): fire spread chance
+
+Return:
+None
+"""
 def search_with_fire(maze, start, goal, last_node, cur_cost, q):
         
     frontier = pq()
@@ -102,8 +124,18 @@ def search_with_fire(maze, start, goal, last_node, cur_cost, q):
                 maze = spread_fire(maze, q)
     return
 
+"""
+Spread fire within maze
+
+Parameters:
+maze (numpy array): the maze, described in mazegen.py
+q (float between 0 and 1): fire spread chance
+
+Return:
+(numpy array): the updated maze
+"""
 def spread_fire(maze, q):
-    maze_copy = maze
+    maze_copy = maze.copy()
     for index, _ in np.ndenumerate(maze):
         # print(index)
         x, y = index
